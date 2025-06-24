@@ -1,0 +1,4 @@
+/home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/testbench/virtual_chip_tb.v:95: warning: extra digits given for sized hex constant.
+/home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/testbench/virtual_chip_tb.v:95: warning: Numeric constant truncated to 256 bits.
+/home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/VirtualChip.v:66: warning: Port 24 (sig_out) of AXI_Interface expects 256 bits, got 520.
+/home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/VirtualChip.v:66:        : Pruning 264 high bits of the expression.

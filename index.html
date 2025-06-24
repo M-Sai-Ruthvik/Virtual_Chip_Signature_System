@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Chip Signature System</title>
+    <meta name="description" content="Advanced digital signature system combining hardware security with blockchain verification">
+    <meta name="keywords" content="digital signature, blockchain, cryptography, FPGA, Verilog, ECDSA">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/styles/main.css">
+    <!-- <link rel="stylesheet" href="/styles/components.css"> -->
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Meta tags for security -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <!-- <meta http-equiv="X-Frame-Options" content="DENY"> -->
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <!-- Ethers.js CDN for browser compatibility -->
+    <script type="module">
+      import { ethers } from 'https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.min.js';
+      window.ethers = ethers;
+    </script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Initializing Virtual Chip Signature System...</p>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🔐 Virtual Chip Signature System</h1>
+                </div>
+                <nav class="main-nav">
+                    <button id="connect-wallet-btn" class="btn btn-primary" title="Only needed for blockchain (on-chain) verification">Connect Wallet</button>
+                    <button id="debug-toggle" class="btn btn-secondary">Debug</button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Signing Section -->
+            <section id="sign-section" class="section">
+                <div class="container">
+                    <h2>Sign</h2>
+                    <div class="signature-form">
+                        <div class="form-group">
+                            <label for="data-input">Data:</label>
+                            <textarea id="data-input" rows="4"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button id="generate-signature-btn" class="btn btn-primary">Generate Signature</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Status Bar Section -->
+            <section id="status-section" class="section">
+                <div class="container">
+                    <div class="status-grid">
+                        <div class="status-card">
+                            <h3>Chip</h3>
+                            <div id="chip-status" class="status-indicator offline">Offline</div>
+                        </div>
+                        <div class="status-card">
+                            <h3>Backend</h3>
+                            <div id="backend-status" class="status-indicator offline">Offline</div>
+                        </div>
+                        <div class="status-card">
+                            <h3>Blockchain</h3>
+                            <div id="blockchain-status" class="status-indicator offline">Offline</div>
+                        </div>
+                        <div class="status-card">
+                            <h3>Session</h3>
+                            <div id="session-status" class="status-indicator offline">Inactive</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hash Display Section -->
+            <section id="hash-section" class="section">
+                <div class="container">
+                    <h2>Keccak Output</h2>
+                    <div id="hash-output" class="output-field">
+                        <p class="placeholder">No hash generated yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ECDSA Output Section -->
+            <section id="ecdsa-section" class="section">
+                <div class="container">
+                    <h2>ECDSA Output</h2>
+                    <div class="results-container">
+                        <div class="result-card">
+                            <h3>r</h3>
+                            <div id="ecdsa-r" class="output-field"><p class="placeholder">-</p></div>
+                        </div>
+                        <div class="result-card">
+                            <h3>s</h3>
+                            <div id="ecdsa-s" class="output-field"><p class="placeholder">-</p></div>
+                        </div>
+                        <div class="result-card">
+                            <h3>v</h3>
+                            <div id="ecdsa-v" class="output-field"><p class="placeholder">-</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Signature Output Section -->
+            <section id="signature-section" class="section">
+                <div class="container">
+                    <h2>Signature Output</h2>
+                    <div class="results-container">
+                        <div class="result-card">
+                            <h3>Signature</h3>
+                            <div id="signature-output" class="output-field">
+                                <p class="placeholder">No signature generated yet</p>
+                            </div>
+                        </div>
+                        <div class="result-card">
+                            <h3>Address</h3>
+                            <div id="address-output" class="output-field"><p class="placeholder">Not yet generated</p></div>
+                            <button id="copy-address-btn" class="btn btn-small" style="margin-left:1em; margin-top:0.5em;">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Verification Section -->
+            <section id="verify-section" class="section">
+                <div class="container">
+                    <h2>Verify</h2>
+                    <div style="margin-bottom: 0.5em; color: #3949ab; font-size: 1em; font-weight: 500;">
+                        <span>MetaMask is <b>only required</b> for <u>on-chain verification</u>. For local or chip verification, you do <b>not</b> need to connect MetaMask.</span>
+                    </div>
+                    <form class="signature-form" style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 600px; margin: 0 auto;">
+                        <div class="form-group" style="display: flex; flex-direction: column;">
+                            <label for="verify-data" style="font-size: 1.1em; font-weight: 600;">Data:</label>
+                            <textarea id="verify-data" rows="4" style="font-size: 1.1em; padding: 0.8em 1em; min-height: 3em;"></textarea>
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: column;">
+                            <label for="verify-signature" style="font-size: 1.1em; font-weight: 600;">Signature:</label>
+                            <textarea id="verify-signature" rows="2" style="font-size: 1.1em; padding: 0.8em 1em; min-height: 2.5em;"></textarea>
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: column;">
+                            <label for="verify-address" style="font-size: 1.1em; font-weight: 600;">Address:</label>
+                            <textarea id="verify-address" rows="2" style="font-size: 1.1em; padding: 0.8em 1em; min-height: 2.5em;"></textarea>
+                        </div>
+                        <div class="form-actions" style="display: flex; justify-content: flex-start; gap: 1em; align-items: center;">
+                            <button id="verify-btn" class="btn btn-secondary" style="font-size: 1.1em; padding: 0.7em 2em;">Verify</button>
+                            <button id="verify-onchain-btn" class="btn btn-primary" type="button" title="Requires MetaMask (Ethereum wallet) to be connected">Verify On-Chain</button>
+                            <span style="font-size: 0.95em; color: #888; margin-left: 0.5em;">(On-chain verification requires MetaMask)</span>
+                        </div>
+                        <div id="verify-result" class="output-field" style="margin-top:1rem;"></div>
+                        <div class="form-actions" style="display: flex; justify-content: flex-start; margin-top: 0.5em;">
+                            <button id="clear-verify-btn" class="btn btn-small" type="button">Clear</button>
+                            <button id="view-history-btn" class="btn btn-small" type="button" style="margin-left:1em;">View Verification History</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!-- Debug Panel (Hidden by default) -->
+        <div id="debug-panel" class="debug-panel" style="display: none;">
+            <div class="debug-header">
+                <h3>Debug Console</h3>
+                <button id="debug-close" class="btn btn-small">×</button>
+            </div>
+            <div id="debug-console" class="debug-console"></div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="container">
+                <p>&copy; 2024 Virtual Chip Signature System. Secure digital signatures powered by hardware and blockchain.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- JavaScript -->
+    <script type="module" src="/src/main.js"></script>
+    
+    <!-- Notification Fallback for Error Boundary -->
+    <script>
+      window.showNotification = window.showNotification || function(msg) { alert(msg); };
+    </script>
+
+    <!-- Error Boundary -->
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.error);
+            // Show user-friendly error message
+            showNotification('An error occurred. Please check the console for details.', 'error');
+        });
+        
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            showNotification('An unexpected error occurred.', 'error');
+        });
+    </script>
+
+    <style>
+    /* Elegant and larger text areas/inputs */
+    textarea, input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%;
+      min-width: 350px;
+      max-width: 700px;
+      min-height: 2.5em;
+      font-size: 1.15em;
+      padding: 0.8em 1em;
+      border-radius: 8px;
+      border: 1px solid #c3c3d1;
+      margin-bottom: 0.7em;
+      box-sizing: border-box;
+    }
+    /* History Table Styling */
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+      font-size: 1em;
+    }
+    .history-table th, .history-table td {
+      border: 1px solid #e0e0e0;
+      padding: 0.6em 0.8em;
+      text-align: left;
+      vertical-align: top;
+    }
+    .history-table th {
+      background: #f7f7fa;
+      font-weight: 600;
+    }
+    .history-table tr:nth-child(even) {
+      background: #fafbfc;
+    }
+    .history-table code {
+      background: #f3f3f7;
+      border-radius: 4px;
+      padding: 0.1em 0.3em;
+      font-size: 0.98em;
+    }
+    </style>
+
+    <!-- Modal for Verification History -->
+    <div id="history-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+      <div style="background:#fff; border-radius:10px; max-width:700px; width:90vw; max-height:80vh; overflow:auto; padding:2em; position:relative;">
+        <button id="close-history-modal" class="btn btn-small" style="position:absolute; top:1em; right:1em;">Close</button>
+        <h2>Verification History</h2>
+        <div id="history-list-container" style="margin-top:1.5em;"></div>
+      </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,49 @@
+ERROR: /home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/Memory_Loader.v:182: $readmemh: Unable to open test_transaction.mem for reading.
+VCD info: dumpfile unit_tests.vcd opened for output.
+[ECDSA_Signer] Test started
+[ECDSA_Verifier] Test started
+[Keccak256_Module] Test started
+[Modular_Arithmetic] Test started
+[Nonce_Handler] Test started
+[Keccak256_Module] hash_out=0000000000000000000000000000000000000000000000000000000000000000
+[Keccak256_Module] hash_out=deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefde000009
+[Keccak256_Module] hash_out=1234567890abcdef1234567890abcdef1234567890abcdef1234567890000009
+[ECDSA_Verifier] FAIL: Error occurred
+[Keccak256_Module] hash_out=0000000000000000000000000000000000000000000000000000000000000000
+[Keccak256_Module] hash_out=fffffffffffffffffffffffffffffffffffffffffffffffffffffffffe000000
+[ECDSA_Verifier] FAIL: Error occurred
+[Keccak256_Module] hash_out=0000000000000000000000000000000000000000000000000000000012000000
+[Keccak256_Module] hash_out=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffc0000000
+[ECDSA_Verifier] FAIL: Error occurred
+[Keccak256_Module] hash_out=ffffffffffffffffffffffffffffffffffffffffffffffffffffffff84000009
+[Keccak256_Module] hash_out=ffffffffffffffffffffffffffffffffffffffffffffffffffffffffb0000000
+[ECDSA_Verifier] FAIL: Error occurred
+[Keccak256_Module] hash_out=0000000000000000000000000000000000000000000000000000000006000000
+[Keccak256_Module] hash_out=0000000000000000000000000000000000000000000000000000000006000000
+[ECDSA_Verifier] FAIL: Error occurred
+[Keccak256_Module] hash_out=000000000000000000000000000000000000000000000000000000003a000009
+[Nonce_Handler] PASS: nonce=1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+[Nonce_Handler] FAIL: Error occurred
+[Nonce_Handler] FAIL: Error occurred
+[Nonce_Handler] PASS: nonce=0000000000000000000000000000000000000000000000000000000072aff7e5
+[Nonce_Handler] FAIL: Error occurred
+[Modular_Arithmetic] PASS: result=0000000000000000000000000000000000000000000000000000000000000001
+[ECDSA_Signer] FAIL: Error occurred
+[Modular_Arithmetic] PASS: result=0000000000000000000000000000000000000000000000000000000000000005
+
+====================
+Testbench Coverage Report:
+Signer done covered: 0
+Signer error covered: 1
+Verifier valid covered: 0
+Verifier error covered: 5
+Keccak covered: 192
+Modular add covered: 1
+Modular mul covered: 1
+Nonce ready covered: 2
+Nonce error covered: 3
+PASS count: 4
+FAIL count: 9
+====================
+
+All unit tests completed!

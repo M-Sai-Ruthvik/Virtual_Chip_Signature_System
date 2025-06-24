@@ -1,0 +1,61 @@
+{
+  "storage": {
+    "defaultFormat": "json",
+    "autoBackup": true,
+    "backupInterval": 3600,
+    "maxFileSize": 1048576,
+    "compressionEnabled": false
+  },
+  "cleanup": {
+    "autoCleanup": true,
+    "maxAgeHours": 24,
+    "maxTotalSizeMB": 100,
+    "cleanupInterval": 3600,
+    "preserveValidSignatures": true
+  },
+  "validation": {
+    "strictMode": true,
+    "autoValidate": true,
+    "requireHash": true,
+    "requireTimestamp": true
+  },
+  "logging": {
+    "logLevel": "INFO",
+    "logToFile": true,
+    "logToConsole": true,
+    "maxLogSize": 10485760,
+    "logRetentionDays": 30
+  },
+  "security": {
+    "encryptStorage": false,
+    "hashVerification": true,
+    "sessionTimeout": 3600,
+    "maxSessionsPerUser": 10
+  },
+  "performance": {
+    "cacheEnabled": true,
+    "cacheSize": 100,
+    "cacheTimeout": 300,
+    "asyncProcessing": true
+  },
+  "notifications": {
+    "emailNotifications": false,
+    "emailAddress": "",
+    "successNotifications": true,
+    "errorNotifications": true,
+    "cleanupNotifications": false
+  },
+  "export": {
+    "defaultFormat": "json",
+    "includeMetadata": true,
+    "includeValidation": true,
+    "autoExport": false
+  },
+  "backup": {
+    "autoBackup": true,
+    "backupLocation": "./backups",
+    "backupInterval": 86400,
+    "maxBackups": 10,
+    "compressBackups": true
+  }
+}

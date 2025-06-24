@@ -1,0 +1,6 @@
+ERROR: /home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/Memory_Loader.v:182: $readmemh: Unable to open test_transaction.mem for reading.
+ERROR: /home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/Memory_Loader.v:182: $readmemh: Unable to open test_transaction.mem for reading.
+Time: 0 | Address: 0 | Data Out: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | Sig Out: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | Done: x | Error: x
+Time: 10000 | Address: 0 | Data Out: 0000000000000000000000000000000000000000000000000000000000000000 | Sig Out: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 | Done: 0 | Error: 0
+Time: 20000 | Address: 1 | Data Out: 0000000000000000000000000000000000000000000000000000000000000000 | Sig Out: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 | Done: 0 | Error: 0
+Time: 30000 | Address: 2 | Data Out: 0000000000000000000000000000000000000000000000000000000000000000 | Sig Out: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 | Done: 0 | Error: 0

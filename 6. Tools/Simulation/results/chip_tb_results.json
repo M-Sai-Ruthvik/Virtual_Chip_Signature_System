@@ -1,0 +1,13 @@
+{
+    "test_name": "chip_tb",
+    "timestamp": "2025-06-24T19:13:52+05:30",
+    "simulation_time": "0",
+    "signatures_generated": 0
+0,
+    "signatures_verified": 0
+0,
+    "errors": 2,
+    "warnings": 0
+0,
+    "status": "FAIL"
+}

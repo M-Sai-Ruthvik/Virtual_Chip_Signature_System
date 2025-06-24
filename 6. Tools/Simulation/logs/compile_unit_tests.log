@@ -1,0 +1,2 @@
+/home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/VirtualChip.v:66: warning: Port 24 (sig_out) of AXI_Interface expects 256 bits, got 520.
+/home/ruthvik/Ruthvik/Virtual_Chip_Signature_System/2. Verilog_Chip_Core/VirtualChip.v:66:        : Pruning 264 high bits of the expression.

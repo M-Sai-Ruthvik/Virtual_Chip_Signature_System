@@ -1,0 +1,4 @@
+testbench/virtual_chip_tb.v:95: warning: extra digits given for sized hex constant.
+testbench/virtual_chip_tb.v:95: warning: Numeric constant truncated to 256 bits.
+VirtualChip.v:66: warning: Port 24 (sig_out) of AXI_Interface expects 256 bits, got 520.
+VirtualChip.v:66:        : Pruning 264 high bits of the expression.

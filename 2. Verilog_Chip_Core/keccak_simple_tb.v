@@ -1,0 +1,1 @@
+module keccak_tb; reg clk, rst; reg [511:0] data_in; wire [255:0] hash_out; Keccak256_Module keccak(clk, rst, data_in, hash_out); initial begin clk=0; rst=1; data_in=0; #10 rst=0; #100 $finish; end always #5 clk=~clk; endmodule

@@ -1,0 +1,276 @@
+/**
+ * Hardhat Configuration and Utilities for Virtual Chip Signature System
+ * Provides comprehensive blockchain development environment
+ * Includes deployment scripts, testing, and network management
+ */
+
+const { task } = require("hardhat/config");
+require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-ethers");
+require("@nomiclabs/hardhat-waffle");
+require("hardhat-gas-reporter");
+require("solidity-coverage");
+
+// Hardhat Configuration
+module.exports = {
+  solidity: {
+    version: "0.8.19",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      },
+      evmVersion: "paris"
+    }
+  },
+  
+  networks: {
+    hardhat: {
+      chainId: 1337,
+      gas: 12000000,
+      blockGasLimit: 12000000,
+      allowUnlimitedContractSize: true
+    },
+    
+    sepolia: {
+      url: process.env.SEPOLIA_RPC_URL || "https://sepolia.infura.io/v3/YOUR_PROJECT_ID",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 11155111,
+      gasPrice: 20000000000, // 20 gwei
+      gas: 6000000
+    },
+    
+    mainnet: {
+      url: process.env.MAINNET_RPC_URL || "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 1,
+      gasPrice: 20000000000, // 20 gwei
+      gas: 6000000
+    },
+    
+    localhost: {
+      url: "http://127.0.0.1:8545",
+      chainId: 1337
+    }
+  },
+  
+  gasReporter: {
+    enabled: process.env.REPORT_GAS !== undefined,
+    currency: "USD",
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY
+  },
+  
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY
+  },
+  
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts"
+  }
+};
+
+// Custom Hardhat Tasks
+
+/**
+ * Task: Deploy SignatureVerifier contract
+ */
+task("deploy:signature-verifier", "Deploy SignatureVerifier contract")
+  .addParam("network", "Network to deploy to")
+  .setAction(async (taskArgs, hre) => {
+    const { ethers } = hre;
+    
+    console.log(`[Hardhat] Deploying SignatureVerifier to ${taskArgs.network}...`);
+    
+    // Get deployer account
+    const [deployer] = await ethers.getSigners();
+    console.log(`[Hardhat] Deploying with account: ${deployer.address}`);
+    
+    // Deploy contract
+    const SignatureVerifier = await ethers.getContractFactory("SignatureVerifier");
+    const signatureVerifier = await SignatureVerifier.deploy();
+    
+    await signatureVerifier.deployed();
+    
+    console.log(`[Hardhat] SignatureVerifier deployed to: ${signatureVerifier.address}`);
+    
+    // Verify deployment
+    const owner = await signatureVerifier.owner();
+    console.log(`[Hardhat] Contract owner: ${owner}`);
+    
+    return signatureVerifier.address;
+  });
+
+/**
+ * Task: Verify contract on Etherscan
+ */
+task("verify:signature-verifier", "Verify SignatureVerifier contract on Etherscan")
+  .addParam("address", "Contract address")
+  .addParam("network", "Network name")
+  .setAction(async (taskArgs, hre) => {
+    console.log(`[Hardhat] Verifying contract ${taskArgs.address} on ${taskArgs.network}...`);
+    
+    try {
+      await hre.run("verify:verify", {
+        address: taskArgs.address,
+        constructorArguments: []
+      });
+      
+      console.log(`[Hardhat] Contract verified successfully!`);
+    } catch (error) {
+      console.error(`[Hardhat] Verification failed:`, error);
+    }
+  });
+
+/**
+ * Task: Run comprehensive tests
+ */
+task("test:comprehensive", "Run comprehensive test suite")
+  .setAction(async (taskArgs, hre) => {
+    console.log("[Hardhat] Running comprehensive test suite...");
+    
+    // Run unit tests
+    await hre.run("test");
+    
+    // Run gas report
+    await hre.run("test:gas");
+    
+    // Run coverage
+    await hre.run("coverage");
+    
+    console.log("[Hardhat] Comprehensive test suite completed!");
+  });
+
+/**
+ * Task: Generate deployment artifacts
+ */
+task("deploy:artifacts", "Generate deployment artifacts")
+  .addParam("contract", "Contract name")
+  .addParam("address", "Contract address")
+  .addParam("network", "Network name")
+  .setAction(async (taskArgs, hre) => {
+    const fs = require('fs');
+    const path = require('path');
+    
+    console.log(`[Hardhat] Generating artifacts for ${taskArgs.contract}...`);
+    
+    // Read contract artifacts
+    const artifactsPath = path.join(__dirname, '..', '..', 'artifacts', 'contracts', `${taskArgs.contract}.sol`, `${taskArgs.contract}.json`);
+    const artifacts = JSON.parse(fs.readFileSync(artifactsPath, 'utf8'));
+    
+    // Create deployment info
+    const deploymentInfo = {
+      contract: taskArgs.contract,
+      address: taskArgs.address,
+      network: taskArgs.network,
+      abi: artifacts.abi,
+      bytecode: artifacts.bytecode,
+      deployedAt: new Date().toISOString(),
+      deployer: (await hre.ethers.getSigners())[0].address
+    };
+    
+    // Save deployment info
+    const outputPath = path.join(__dirname, '..', '..', 'deployments', `${taskArgs.network}_${taskArgs.contract}.json`);
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, JSON.stringify(deploymentInfo, null, 2));
+    
+    console.log(`[Hardhat] Deployment artifacts saved to: ${outputPath}`);
+  });
+
+/**
+ * Task: Fund test accounts
+ */
+task("fund:test-accounts", "Fund test accounts with ETH")
+  .addParam("network", "Network to fund accounts on")
+  .addParam("amount", "Amount of ETH to send")
+  .setAction(async (taskArgs, hre) => {
+    const { ethers } = hre;
+    
+    console.log(`[Hardhat] Funding test accounts on ${taskArgs.network}...`);
+    
+    const [deployer] = await ethers.getSigners();
+    const testAccounts = [
+      "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+      "0x90F79bf6EB2c4f870365E785982E1f101E93b906"
+    ];
+    
+    const amount = ethers.utils.parseEther(taskArgs.amount);
+    
+    for (const account of testAccounts) {
+      const tx = await deployer.sendTransaction({
+        to: account,
+        value: amount
+      });
+      
+      await tx.wait();
+      console.log(`[Hardhat] Funded ${account} with ${taskArgs.amount} ETH`);
+    }
+    
+    console.log(`[Hardhat] All test accounts funded!`);
+  });
+
+/**
+ * Task: Check network status
+ */
+task("network:status", "Check network status and configuration")
+  .addParam("network", "Network name")
+  .setAction(async (taskArgs, hre) => {
+    const { ethers } = hre;
+    
+    console.log(`[Hardhat] Checking status of ${taskArgs.network}...`);
+    
+    try {
+      const provider = ethers.provider;
+      const network = await provider.getNetwork();
+      const blockNumber = await provider.getBlockNumber();
+      const gasPrice = await provider.getGasPrice();
+      
+      console.log(`[Hardhat] Network: ${network.name} (Chain ID: ${network.chainId})`);
+      console.log(`[Hardhat] Current block: ${blockNumber}`);
+      console.log(`[Hardhat] Gas price: ${ethers.utils.formatUnits(gasPrice, 'gwei')} gwei`);
+      
+      const [deployer] = await ethers.getSigners();
+      const balance = await provider.getBalance(deployer.address);
+      console.log(`[Hardhat] Deployer balance: ${ethers.utils.formatEther(balance)} ETH`);
+      
+    } catch (error) {
+      console.error(`[Hardhat] Failed to check network status:`, error);
+    }
+  });
+
+/**
+ * Task: Clean and reset
+ */
+task("clean:all", "Clean all artifacts and cache")
+  .setAction(async (taskArgs, hre) => {
+    const fs = require('fs');
+    const path = require('path');
+    
+    console.log("[Hardhat] Cleaning all artifacts and cache...");
+    
+    const dirsToClean = [
+      path.join(__dirname, '..', '..', 'cache'),
+      path.join(__dirname, '..', '..', 'artifacts'),
+      path.join(__dirname, '..', '..', 'coverage'),
+      path.join(__dirname, '..', '..', 'coverage.json')
+    ];
+    
+    for (const dir of dirsToClean) {
+      if (fs.existsSync(dir)) {
+        if (fs.lstatSync(dir).isDirectory()) {
+          fs.rmSync(dir, { recursive: true, force: true });
+        } else {
+          fs.unlinkSync(dir);
+        }
+        console.log(`[Hardhat] Cleaned: ${dir}`);
+      }
+    }
+    
+    console.log("[Hardhat] Clean completed!");
+  });
+
+// Export configuration
+module.exports.config = module.exports;
