@@ -609,22 +609,7 @@ class ResultDisplay {
             margin-top: 15px;
         `;
 
-        // Copy button
-        const copyBtn = document.createElement("button");
-        copyBtn.textContent = "📋 Copy";
-        copyBtn.onclick = () => this.copyToClipboard(result);
-        copyBtn.style.cssText = `
-            background: #4444ff;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            flex: 1;
-        `;
-
-        // Export button
+        // Export button only
         const exportBtn = document.createElement("button");
         exportBtn.textContent = "💾 Export";
         exportBtn.onclick = () => this.exportResult(result);
@@ -639,9 +624,7 @@ class ResultDisplay {
             flex: 1;
         `;
 
-        actions.appendChild(copyBtn);
         actions.appendChild(exportBtn);
-
         return actions;
     }
 
@@ -659,7 +642,7 @@ class ResultDisplay {
             margin-top: 15px;
         `;
 
-        // View on explorer
+        // View on explorer only
         const explorerBtn = document.createElement("button");
         explorerBtn.textContent = "🔍 Explorer";
         explorerBtn.onclick = () => this.openExplorer(result.txHash);
@@ -674,24 +657,7 @@ class ResultDisplay {
             flex: 1;
         `;
 
-        // Copy hash
-        const copyBtn = document.createElement("button");
-        copyBtn.textContent = "📋 Copy Hash";
-        copyBtn.onclick = () => this.copyToClipboard(result.txHash);
-        copyBtn.style.cssText = `
-            background: #4444ff;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            flex: 1;
-        `;
-
         actions.appendChild(explorerBtn);
-        actions.appendChild(copyBtn);
-
         return actions;
     }
 
@@ -742,20 +708,6 @@ class ResultDisplay {
         actions.appendChild(reportBtn);
 
         return actions;
-    }
-
-    /**
-     * Copy to clipboard
-     * @param {Object|string} data - Data to copy
-     */
-    copyToClipboard(data) {
-        const text = typeof data === "string" ? data : JSON.stringify(data, null, 2);
-        
-        navigator.clipboard.writeText(text).then(() => {
-            // this.showNotification("Copied to clipboard!", "success");
-        }).catch(() => {
-            // this.showNotification("Failed to copy", "error");
-        });
     }
 
     /**

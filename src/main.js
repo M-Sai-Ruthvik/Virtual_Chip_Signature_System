@@ -5,16 +5,16 @@
  * between all the different modules (Frontend, Blockchain, Hardware).
  */
 
-import { log, LOG_LEVELS } from '../1. Frontend_UI/Developer_Debug_UI/debugLogConsole.js';
-import { connectWallet } from '../1. Frontend_UI/MetaMask_Integration/connectWallet.js';
-import { assignSessionID } from '../1. Frontend_UI/Session_Handler/assignSessionID.js';
-import { storeTempData, getTempData } from '../1. Frontend_UI/JS_Memory/storeTempData.js';
-import { updateStatus } from '../5. UI_Feedback_Module/Result_Display.js';
-import { processReceipt } from '../5. UI_Feedback_Module/Receipt_Processor.js';
-import { renderUserInputForm } from '../1. Frontend_UI/Input_Form/userInputForm.js';
-import { validateUserInput } from '../1. Frontend_UI/Input_Form/validateUserInput.js';
-import { jsonToMemFormat } from '../1. Frontend_UI/Format_Handler/jsonToMemFormat.js';
-import { generateInputMem } from '../1. Frontend_UI/Verilog_File_Generator/generateInputMem.js';
+import { log, LOG_LEVELS } from '../frontend_ui/developer_debug_ui/debugLogConsole.js';
+import { connectWallet } from '../frontend_ui/metamask_integration/connectWallet.js';
+import { assignSessionID } from '../frontend_ui/session_handler/assignSessionID.js';
+import { storeTempData, getTempData } from '../frontend_ui/js_memory/storeTempData.js';
+import { updateStatus } from '../ui_feedback_module/Result_Display.js';
+import { processReceipt } from '../ui_feedback_module/Receipt_Processor.js';
+import { renderUserInputForm } from '../frontend_ui/input_form/userInputForm.js';
+import { validateUserInput } from '../frontend_ui/input_form/validateUserInput.js';
+import { jsonToMemFormat } from '../frontend_ui/format_handler/jsonToMemFormat.js';
+import { generateInputMem } from '../frontend_ui/verilog_file_generator/generateInputMem.js';
 const ethers = window.ethers;
 
 // Application state
@@ -35,6 +35,7 @@ class VirtualChipSignatureApp {
     constructor() {
         this.state = new AppState();
         this.modules = {};
+        this.pollStatusInterval = null;
         this.init();
     }
 
@@ -307,33 +308,62 @@ class VirtualChipSignatureApp {
             }
         }
 
+        // Copy signature button
+        const copySignatureBtn = document.getElementById('copy-signature-btn');
+        if (copySignatureBtn) {
+            copySignatureBtn.addEventListener('click', () => {
+                const signatureValue = document.getElementById('signature-value');
+                if (signatureValue && signatureValue.textContent && signatureValue.textContent !== '-') {
+                    navigator.clipboard.writeText(signatureValue.textContent);
+                    showNotification('Signature copied to clipboard!');
+                } else {
+                    showNotification('No signature to copy.', 'error');
+                }
+            });
+        }
+        // Copy address button
+        const copyAddressBtn = document.getElementById('copy-address-btn');
+        if (copyAddressBtn) {
+            copyAddressBtn.addEventListener('click', () => {
+                const addressOutput = document.getElementById('address-output');
+                const code = addressOutput ? addressOutput.querySelector('code') : null;
+                if (code && code.textContent && code.textContent !== '-') {
+                    navigator.clipboard.writeText(code.textContent);
+                    showNotification('Address copied to clipboard!');
+                } else {
+                    showNotification('No address to copy.', 'error');
+                }
+            });
+        }
+
         log('Event listeners setup complete', LOG_LEVELS.DEBUG, 'EVENTS');
     }
 
     async handleWalletConnection() {
         try {
-            log('Attempting wallet connection...', LOG_LEVELS.INFO, 'WALLET');
-            
-            const account = await this.modules.wallet.connect();
-            
-            if (account) {
+            await this.modules.wallet.connect();
                 this.state.walletConnected = true;
-                this.state.walletAddress = account;
-                this.state.networkStatus = 'connected';
-                
-                // Store wallet info
-                this.modules.storage.store('walletAddress', account);
-                
-                log(`Wallet connected: ${account}`, LOG_LEVELS.INFO, 'WALLET');
-                
-                // Update UI
                 this.updateUI();
-            } else {
-                throw new Error('Failed to connect wallet');
-            }
-            
+            this.startStatusPolling();
+            this.setupMetaMaskListeners();
+            // Now check blockchain status
+            checkBlockchainStatus();
         } catch (error) {
-            log(`Wallet connection failed: ${error.message}`, LOG_LEVELS.ERROR, 'WALLET');
+            log('Wallet connection failed: ' + error.message, LOG_LEVELS.ERROR, 'WALLET');
+        }
+    }
+
+    startStatusPolling() {
+        if (this.pollStatusInterval) return;
+        pollStatus(); // poll once immediately
+        this.pollStatusInterval = setInterval(pollStatus, 5000);
+    }
+
+    setupMetaMaskListeners() {
+        if (window.ethereum) {
+            window.ethereum.on('connect', checkBlockchainStatus);
+            window.ethereum.on('accountsChanged', checkBlockchainStatus);
+            window.ethereum.on('chainChanged', checkBlockchainStatus);
         }
     }
 
@@ -343,16 +373,19 @@ class VirtualChipSignatureApp {
             const dataInput = document.getElementById('data-input');
             const message = dataInput?.value?.trim();
             if (!message) {
+                log('[WARN] No message provided for signature generation.', LOG_LEVELS.WARN, 'SIGNATURE');
                 return;
             }
-            log('Generating signature...', LOG_LEVELS.INFO, 'SIGNATURE');
+            log('[DEBUG] Generating signature for message: ' + message, LOG_LEVELS.DEBUG, 'SIGNATURE');
             // Real signature generation via backend
             const response = await fetch('http://localhost:4000/sign', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message })
             });
+            log('[DEBUG] Awaiting backend response...', LOG_LEVELS.DEBUG, 'SIGNATURE');
             const data = await response.json();
+            log('[DEBUG] Backend response: ' + JSON.stringify(data), LOG_LEVELS.DEBUG, 'SIGNATURE');
             if (!data.success) throw new Error(data.error || 'Signature generation failed');
             const realSignature = {
                 message: message,
@@ -360,10 +393,32 @@ class VirtualChipSignatureApp {
                 hash: data.hash,
                 publicKey: data.publicKey,
                 timestamp: new Date().toISOString(),
+                r: data.r,
+                s: data.s,
+                v: data.v
             };
             this.state.currentSignature = realSignature;
             this.modules.storage.store('currentSignature', realSignature);
             this.updateSignatureOutput(realSignature);
+
+            // Update Keccak hash output
+            const hashOutput = document.getElementById('hash-output');
+            if (hashOutput) {
+                log('[DEBUG] Updating Keccak output: ' + data.hash, LOG_LEVELS.DEBUG, 'SIGNATURE');
+                hashOutput.innerHTML = `<code>${data.hash}</code>`;
+            }
+            // Update ECDSA r, s, v outputs if present
+            if (data.r && data.s && typeof data.v !== 'undefined') {
+                const rBox = document.getElementById('ecdsa-r');
+                const sBox = document.getElementById('ecdsa-s');
+                const vBox = document.getElementById('ecdsa-v');
+                log(`[DEBUG] Updating ECDSA outputs: r=${data.r}, s=${data.s}, v=${data.v}`, LOG_LEVELS.DEBUG, 'SIGNATURE');
+                if (rBox) rBox.innerHTML = `<code>${data.r}</code>`;
+                if (sBox) sBox.innerHTML = `<code>${data.s}</code>`;
+                if (vBox) vBox.innerHTML = `<code>${data.v}</code>`;
+            } else {
+                log('[WARN] ECDSA r, s, v missing from backend response.', LOG_LEVELS.WARN, 'SIGNATURE');
+            }
             log('Signature generated successfully', LOG_LEVELS.INFO, 'SIGNATURE');
         } catch (error) {
             log(`Signature generation failed: ${error.message}`, LOG_LEVELS.ERROR, 'SIGNATURE');
@@ -476,23 +531,19 @@ class VirtualChipSignatureApp {
     }
 
     updateSignatureOutput(signature) {
+        // Clear and update all output fields
+        const rBox = document.getElementById('ecdsa-r');
+        const sBox = document.getElementById('ecdsa-s');
+        const vBox = document.getElementById('ecdsa-v');
+        const addressOutput = document.getElementById('address-output');
         const signatureOutput = document.getElementById('signature-output');
+
+        if (rBox) rBox.innerHTML = `<code>${signature.r ? signature.r : '-'}</code>`;
+        if (sBox) sBox.innerHTML = `<code>${signature.s ? signature.s : '-'}</code>`;
+        if (vBox) vBox.innerHTML = `<code>${typeof signature.v !== 'undefined' ? signature.v : '-'}</code>`;
+        if (addressOutput) addressOutput.innerHTML = `<code>${signature.publicKey ? signature.publicKey : '-'}</code>`;
         if (signatureOutput) {
-            signatureOutput.innerHTML = `
-                <div class="signature-details">
-                    <p><strong>Message:</strong> ${signature.message}</p>
-                    <p><strong>Signature:</strong> <code>${signature.signature}</code></p>
-                    <p><strong>Hash:</strong> <code>${signature.hash}</code></p>
-                    <p><strong>Public Key:</strong> <code>${signature.publicKey}</code></p>
-                    <p><strong>Timestamp:</strong> ${new Date(signature.timestamp).toLocaleString()}</p>
-                    <button id="send-to-chain-btn" class="btn btn-primary" style="margin-top:1rem;">Send to Sepolia</button>
-                </div>
-            `;
-            // Add event listener for sending to Sepolia
-            const sendBtn = document.getElementById('send-to-chain-btn');
-            if (sendBtn) {
-                sendBtn.onclick = () => this.sendSignatureToSepolia(signature);
-            }
+            signatureOutput.innerHTML = `<code id="signature-value">${signature.signature ? signature.signature : '-'}</code>`;
         }
     }
 
@@ -597,7 +648,7 @@ async function checkBlockchainStatus() {
     }
 }
 
-// Update pollStatus to also check blockchain status
+// Update pollStatus to only update backend/chip status
 async function pollStatus() {
     try {
         const res = await fetch('http://localhost:4000/api/status');
@@ -608,20 +659,7 @@ async function pollStatus() {
         setStatus('backend-status', 'offline');
         setStatus('chip-status', 'offline');
     }
-    // Always check blockchain status
-    checkBlockchainStatus();
-}
-
-// Poll every 5 seconds
-setInterval(pollStatus, 5000);
-// Also poll once on page load
-pollStatus();
-
-// Check blockchain status on MetaMask events
-if (window.ethereum) {
-    window.ethereum.on('connect', checkBlockchainStatus);
-    window.ethereum.on('accountsChanged', checkBlockchainStatus);
-    window.ethereum.on('chainChanged', checkBlockchainStatus);
+    // Do NOT call checkBlockchainStatus here
 }
 
 // Helper to reset ECDSA output fields
@@ -636,3 +674,7 @@ function resetSignatureOutput() {
     document.getElementById('signature-output').innerHTML = '<p class="placeholder">Not yet generated</p>';
     document.getElementById('address-output').innerHTML = '<p class="placeholder">Not yet generated</p>';
 } 
+
+// At the end of the file, always poll backend/chip status
+setInterval(pollStatus, 5000);
+pollStatus(); 

@@ -9,9 +9,8 @@ export async function connectWallet() {
     if (isConnecting) return;
     isConnecting = true;
     if (typeof window.ethereum === 'undefined') {
-        // MetaMask not installed, just return null (optional)
-        isConnecting = false;
-        return null;
+        alert('MetaMask extension not found. Please install MetaMask to use this feature.');
+        return;
     }
     try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -33,11 +32,11 @@ export async function connectWallet() {
 }
 
 // Example usage
-(async () => {
-    const account = await connectWallet();
-    if (account) {
-        console.log('Wallet connected:', account);
-    } else {
-        console.log('Failed to connect wallet.');
-    }
-})();
+// (async () => {
+//     const account = await connectWallet();
+//     if (account) {
+//         console.log('Wallet connected:', account);
+//     } else {
+//         console.log('Failed to connect wallet.');
+//     }
+// })();

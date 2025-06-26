@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Rebuild backend if needed (optional for Node.js, but print a message)
+echo "[INFO] Ensure you restart this script after backend code changes."
+
 # Start backend
 cd backend
 if [ ! -d node_modules ]; then
@@ -28,4 +31,4 @@ echo "All services started!"
 echo "- Backend running (see backend logs)"
 echo "- Frontend UI: http://localhost:8000 (open in your browser)"
 echo "- Verilog simulation running (if applicable)"
-echo "To stop all, run: kill $BACKEND_PID $FRONTEND_PID ${SIM_PID:-}" 
+echo "To stop all, run: kill $BACKEND_PID $FRONTEND_PID ${SIM_PID:-} (or use 'pkill -f node' to stop all Node.js processes)" 

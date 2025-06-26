@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { ethers } = require('ethers');
-const fs = require('fs');
-const path = require('path');
 
 const app = express();
 const PORT = 4000;
@@ -62,21 +60,9 @@ app.post('/sign', async (req, res) => {
 
 // GET /api/status - backend status
 app.get('/api/status', (req, res) => {
-    // Path to your simulation output or status file
-    const simFile = path.join(__dirname, '../1. Verilog_Chip_Core/simulation/sim');
-    let chipOnline = false;
-    try {
-        const stats = fs.statSync(simFile);
-        // Consider chip online if file was modified in the last 10 seconds
-        if (Date.now() - stats.mtimeMs < 10000) {
-            chipOnline = true;
-        }
-    } catch (e) {
-        chipOnline = false;
-    }
     res.json({
         backend: true,
-        chip: chipOnline
+        chip: false
     });
 });
 

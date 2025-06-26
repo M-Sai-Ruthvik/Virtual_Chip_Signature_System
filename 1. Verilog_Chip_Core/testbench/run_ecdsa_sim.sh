@@ -20,10 +20,17 @@ if ! command -v gtkwave &> /dev/null; then
     echo "Install with: sudo apt-get install gtkwave"
 fi
 
-# Compile the testbench
+# Compile the testbench - only include necessary modules
 echo "Compiling ECDSA testbench..."
 iverilog -o ecdsa_sim \
     ../ECDSA_Signer.v \
+    ../Modular_Arithmetic.v \
+    ../Memory_Loader.v \
+    ../Output_Handler.v \
+    ../Nonce_Handler.v \
+    ../Keccak256_Module.v \
+    ../defines.v \
+    ../config.v \
     ecdsa_tb.v
 
 if [ $? -ne 0 ]; then

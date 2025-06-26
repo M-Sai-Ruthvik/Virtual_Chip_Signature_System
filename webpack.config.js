@@ -94,7 +94,7 @@ module.exports = (env, argv) => {
             }
         },
         
-        devtool: isProduction ? 'source-map' : 'eval-source-map',
+        devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
         
         performance: {
             hints: isProduction ? 'warning' : false,

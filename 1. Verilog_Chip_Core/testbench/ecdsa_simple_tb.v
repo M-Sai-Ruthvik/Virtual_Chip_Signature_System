@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
-// ecdsa_tb.v - Testbench for ECDSA Signer with r, s, v components
-// Tests signature generation with various inputs
-// Tests correct flow: Message → Keccak → ECDSA
+// ecdsa_simple_tb.v - Simplified ECDSA Testbench
+// Tests basic ECDSA signature generation with minimal dependencies
 // Author: Virtual Chip Signature System
 
 `timescale 1ns / 1ps
 
-module ecdsa_tb;
+module ecdsa_simple_tb;
 
     // Test parameters
     reg clk;
@@ -15,7 +14,7 @@ module ecdsa_tb;
     reg [255:0] priv_key;
     reg [255:0] nonce;
     reg start;
-    wire [519:0] sig_out;  // Updated to 65 bytes (r, s, v)
+    wire [519:0] sig_out;  // r, s, v components
     wire busy, done, error;
 
     reg [7:0] hash_bytes [0:31];
@@ -44,8 +43,8 @@ module ecdsa_tb;
     // Test stimulus
     initial begin
         // Initialize waveform dump
-        $dumpfile("ecdsa_tb.vcd");
-        $dumpvars(0, ecdsa_tb);
+        $dumpfile("ecdsa_simple_tb.vcd");
+        $dumpvars(0, ecdsa_simple_tb);
 
         // Initialize signals
         rst_n = 0;
@@ -66,23 +65,38 @@ module ecdsa_tb;
             for (i = 0; i < 32; i = i + 1) begin
                 msg_in = (msg_in << 8) | hash_bytes[i];
             end
+            $display("Read hash from ecdsa_input.mem: %064x", msg_in);
         end else begin
             $display("Warning: ecdsa_input.mem not found, using default test vector");
-        msg_in = 256'h1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF;
+            msg_in = 256'h1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890ABCDEF;
         end
+        
+        // Set test values
         priv_key = 256'hA1B2C3D4E5F6789012345678901234567890ABCDEF1234567890ABCDEF123456;
         nonce = 256'hFEDCBA0987654321FEDCBA0987654321FEDCBA0987654321FEDCBA0987654321;
+        
+        $display("Starting ECDSA signature generation...");
+        $display("Message: %064x", msg_in);
+        $display("Private Key: %064x", priv_key);
+        $display("Nonce: %064x", nonce);
+        
         start = 1;
         #10;
         start = 0;
+        
+        // Wait for completion
         wait(done || error);
+        
         if (done) begin
             $display("r: %064x", sig_out[519:264]);
             $display("s: %064x", sig_out[263:8]);
             $display("v: %02x", sig_out[7:0]);
+            $display("ECDSA signature generation completed successfully!");
         end else if (error) begin
             $display("Error occurred during signature generation!");
         end
+        
+        #100;
         $finish;
     end
 
@@ -98,15 +112,5 @@ module ecdsa_tb;
             $display("Time %0t: ECDSA operation failed", $time);
         end
     end
-
-    // Helper function for wide random values
-    function [255:0] random256;
-        input integer seed;
-        integer s;
-        begin
-            s = seed;
-            random256 = {$random(s), $random(s), $random(s), $random(s), $random(s), $random(s), $random(s), $random(s)};
-        end
-    endfunction
 
 endmodule 
