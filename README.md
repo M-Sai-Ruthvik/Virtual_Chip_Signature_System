@@ -30,13 +30,3 @@ This is a sophisticated cryptographic hardware-software system that implements d
 2. **Cross-Platform**: Supports CPU/FPGA communication through standardized AXI4 protocols
 3. **Security-First**: Includes dedicated security notes and proper error handling with AXI response codes
 4. **Production-Ready**: MIT licensed with comprehensive documentation and automated startup scripts
-
-### **Skills Demonstrated for Resume**
-- Hardware Design: Verilog, FPGA architecture, AXI protocols
-- Cryptography: ECDSA, Keccak-256, digital signatures
-- Full-Stack Development: JavaScript, Node.js, Solidity
-- Hardware-Software Integration: Register mapping, signal handshaking
-- System Design: Dataflow diagrams, protocol design, error handling
-- DevOps: Shell scripting, test automation, deployment
-
-This is an excellent portfolio project that demonstrates advanced expertise in hardware-software co-design, cryptographic systems, and full-stack development!
