@@ -2,7 +2,7 @@
 ## **Virtual Chip Signature System**
 
 ### **Project Summary**
-This is a sophisticated cryptographic hardware-software system that implements digital signature generation and verification using ECDSA (Elliptic Curve Digital Signature Algorithm) and Keccak-256 hashing. The project combines hardware design (Verilog) with a web-based interface to enable cryptographic operations across FPGA and blockchain environments.
+This is a Cryptographic Hardware-Sftware System that implements digital signature generation and verification using ECDSA (Elliptic Curve Digital Signature Algorithm) and Keccak-256 hashing. The project combines hardware design (Verilog) with a web-based interface to enable cryptographic operations across FPGA and blockchain environments.
 
 ### **Key Technical Components**
 
