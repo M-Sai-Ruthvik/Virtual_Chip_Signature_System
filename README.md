@@ -6,155 +6,316 @@ This is a **Production-Ready Cryptographic Hardware-Software System** that imple
 1. **Digital Signature Generation & Verification** using ECDSA (Elliptic Curve Digital Signature Algorithm)
 2. **Keccak-256 Hashing** for message digests
 3. **Mini Blockchain System** built with digital electronics principles for distributed ledger operations
-4. **Future Analog Integration** with TRNG entropy sources and power analysis resistant circuits
+4. **Future Analog & Hybrid Integration** for enhanced security and efficiency
 
 ---
 
-## **Project Roadmap**
+## **Project Roadmap - 3 Phases**
 
-### **Phase 1: Production-Ready Digital Crypto Core** ✅ (Current Focus)
-- [x] ECDSA signer/verifier (Verilog)
+### **Phase 1: First Digital Chip** ✅ (Current Focus)
+Production-ready digital cryptographic core.
+
+**Hardware (Verilog):**
+- [x] ECDSA signer/verifier (P-256 curve)
 - [x] Keccak-256 hash module
-- [x] AXI4-Lite interface
-- [ ] **Production Hardening**:
-  - [ ] Formal verification (TLA+)
-  - [ ] Side-channel resistant implementations
-  - [ ] Comprehensive security audit
-  - [ ] Production test suites (ATPG, DFT)
-  - [ ] Performance optimization (timing closure)
+- [ ] AXI4-Lite interface (hardware protocol)
+- [ ] Mini blockchain hardware (block validator, Merkle tree, state machine)
 
-### **Phase 2: Mini Blockchain System** 🚀 (Next)
-- [ ] **Block Structure** (Verilog HDL):
-  - [ ] Merkle tree root computation hardware
-  - [ ] Block header validation pipeline
-  - [ ] Transaction pooling and ordering
-  
-- [ ] **Consensus Mechanism** (Proof-of-Authority PoA):
-  - [ ] Validator signature verification chain
-  - [ ] State machine for block acceptance
-  - [ ] Finality computation
-  
-- [ ] **Distributed Ledger** (JavaScript/Node.js):
-  - [ ] Block synchronization protocol
-  - [ ] State management and persistence
-  - [ ] P2P networking (libp2p)
-  - [ ] Fork resolution strategy
-  
-- [ ] **Integration**:
-  - [ ] Crypto chip → Blockchain node communication
-  - [ ] Transaction validation pipeline
-  - [ ] Block production scheduling
+**Deliverables:**
+- [ ] FPGA bitstream (Vivado/Quartus)
+- [ ] Synthesized RTL for ASIC
+- [ ] Formal verification (TLA+)
+- [ ] Production test suites (ATPG, DFT)
+- [ ] Comprehensive documentation
 
-### **Phase 3: Analog Hardware Security** 🔧 (Future - Post-Phase 2)
-- [ ] True Random Number Generator (TRNG) with Zener noise source
-- [ ] Power supply filtering and side-channel countermeasures
-- [ ] Glitch detection and fault injection resistance
-- [ ] Thermal management and temperature compensation
+**Performance Targets:**
+- ECDSA sign/verify: < 1ms on FPGA
+- Keccak-256: < 500μs
+- Block validation: < 100ms
+- Throughput: > 1000 transactions/sec
 
-### **Phase 4: Analog Chip Implementation** ⚡ (Post-Production)
-After the **digital chip is production-ready**, implement a **pure analog version** of the cryptographic core using analog design principles:
+**Security Hardening:**
+- [ ] Side-channel resistant implementations (constant-time)
+- [ ] Fault injection countermeasures
+- [ ] Power analysis resistance
+- [ ] External security audit
+
+---
+
+### **Phase 2: Second Analog Chip** 🔧 (Post-Phase 1)
+Pure analog implementation from scratch, built with fundamentally different principles.
 
 #### **Analog ECDSA Signer/Verifier**
-- [ ] **Elliptic Curve Operations in Analog Domain**:
-  - [ ] Point addition circuits using translinear elements
-  - [ ] Scalar multiplication via log-domain circuits
-  - [ ] Field multiplication using analog multipliers (Gilbert cell topology)
-  - [ ] Modular reduction using current-mode arithmetic
-  
-- [ ] **Core Analog Building Blocks**:
-  - [ ] **Integrators**: For accumulation and curve operations
-  - [ ] **Multipliers**: Gilbert cell multipliers for field arithmetic
-  - [ ] **Comparators**: For threshold detection and branching
-  - [ ] **Current Mirrors**: For precise signal replication
-  - [ ] **Op-Amp Arrays**: Linear and nonlinear circuits
+
+**Elliptic Curve Operations:**
+- Translinear circuits for point addition and scalar multiplication
+- Log-domain arithmetic for constant-time operations
+- Field multiplication using Gilbert cell topology
+- Modular reduction via analog arithmetic
+
+**Core Building Blocks:**
+- **Integrators**: For curve accumulation and state storage
+- **Multipliers**: Gilbert cell (log-domain multipliers)
+- **Comparators**: For threshold detection and branching
+- **Current Mirrors**: High-precision signal replication
+- **Op-Amp Arrays**: Linear and nonlinear circuits
+
+**Circuit Topologies:**
+- Fully differential design (noise immunity)
+- Cascode stages (high gain)
+- Latch-based memory (state flip-flops)
+- Interdigitated layouts (device matching)
 
 #### **Analog Keccak-256 Hash Module**
-- [ ] **Nonlinear Transformation Circuits**:
-  - [ ] Theta step: Cross-coupled mixing using analog XOR (differential pairs)
-  - [ ] Rho step: Bit rotation via analog shift registers (phase shift networks)
-  - [ ] Pi step: State permutation using analog routing and buffering
-  - [ ] Chi step: Nonlinear mixing using analog logic gates
-  - [ ] Iota step: Constant injection via precision current sources
-  
-- [ ] **Analog Permutation Network**:
-  - [ ] 24 rounds implemented as cascaded analog stages
-  - [ ] Pipelined architecture for continuous hashing
-  - [ ] Charge-based storage for intermediate states
+
+**Nonlinear Transformation Circuits:**
+- **Theta Step**: Cross-coupled mixing (differential pair XOR)
+- **Rho Step**: Bit rotation (phase shift networks)
+- **Pi Step**: State permutation (analog routing/buffering)
+- **Chi Step**: Nonlinear mixing (analog logic gates)
+- **Iota Step**: Constant injection (precision current sources)
+
+**Architecture:**
+- 24 rounds in cascaded analog stages
+- Pipelined design for continuous hashing
+- Charge-based intermediate state storage
+- Continuous analog signal processing (no clock needed)
 
 #### **Analog AXI4-Lite Interface**
-- [ ] **Current-Mode Signaling**:
-  - [ ] Write/Read handshake using current pulses
-  - [ ] Data transmission via analog voltage/current encoding
-  - [ ] Address decoding using analog comparators
-  
-- [ ] **Analog Protocol Drivers**:
-  - [ ] Bus line drivers with analog output impedance matching
-  - [ ] Slew rate control for EMI reduction
-  - [ ] Voltage-level translation for mixed-signal systems
 
-#### **Analog Power Delivery & Biasing**
-- [ ] **Precision Current Sources**: For circuit biasing and operation
-- [ ] **Bandgap References**: Temperature-compensated bias generation
-- [ ] **Power Supply Filtering**: Capacitor arrays and LC filters
-- [ ] **Current Limiting**: Foldback current limiters for safety
+**Current-Mode Signaling:**
+- Write/Read handshake using current pulses
+- Data transmission via analog voltage/current encoding
+- Address decoding with analog comparators
+- Bus line drivers with impedance matching
+
+**Protocol Implementation:**
+- Slew rate control for EMI reduction
+- Voltage-level translation for mixed-signal systems
+- Low-noise biasing and filtering
+
+#### **Analog Power & Biasing**
+
+- **Precision Current Sources**: For biasing and circuit operation
+- **Bandgap References**: Temperature-compensated bias generation
+- **Power Supply Filtering**: Capacitor arrays and LC filters
+- **Current Limiting**: Foldback protection circuits
 
 #### **Analog-Specific Security Features**
-- [ ] **Translinear Circuits**: Logarithmic compression for constant-time operations
-- [ ] **Switched-Capacitor Filters**: Anti-tampering frequency analysis
-- [ ] **Analog Differential Circuits**: Side-channel noise injection
-- [ ] **Thermal Feedback**: Self-heating to prevent thermal attacks
-- [ ] **Substrate Biasing**: Body effect exploitation for fault resistance
+
+- **Translinear Circuits**: Logarithmic compression → constant-time operations
+- **Switched-Capacitor Filters**: Anti-tampering frequency analysis
+- **Differential Circuits**: Inherent side-channel noise injection
+- **Thermal Management**: Self-heating to prevent thermal attacks
+- **Substrate Biasing**: Body effect exploitation for fault resistance
+- **True Random Number Generator (TRNG)**: Zener noise entropy source
 
 #### **Manufacturing & Layout**
-- [ ] **Process Node**: 130nm or below (analog-friendly technology)
-- [ ] **Circuit Topologies**:
-  - [ ] Fully differential for noise immunity
-  - [ ] Cascode stages for high gain
-  - [ ] Latch-based memory (flip-flops) for state storage
-  - [ ] Interdigitated layouts for matching
-  
-- [ ] **Power Dissipation**:
-  - [ ] Estimated 10-50mW @ 1MHz (analog typically higher than digital)
-  - [ ] Low supply voltage operation (1.2V - 3.3V)
-  - [ ] Ultra-low leakage with subthreshold circuits
+
+**Process Technology:**
+- 130nm or below (analog-friendly node)
+- Fully custom layout (not standard cells)
+
+**Layout Considerations:**
+- Interdigitated transistors for matching
+- Guard rings for substrate noise isolation
+- Differential routing (paired signal lines)
+- Separate analog/digital power planes
+
+**Power Dissipation:**
+- Estimated 10-50mW @ 10-100MHz
+- Ultra-low leakage with subthreshold operation
+- 1.2V - 3.3V supply voltage options
 
 #### **Analog Testing & Characterization**
-- [ ] **Testbenches**: Cadence Spectre/ADS simulations
-- [ ] **Process Variation**: Monte Carlo analysis
-- [ ] **Temperature Sweeps**: -40°C to +125°C operation
-- [ ] **Supply Variation**: ±10% voltage stability
-- [ ] **Mismatch Analysis**: Device parameter variations
-- [ ] **Transient Response**: Step response and frequency sweeps
 
-#### **Comparison: Digital vs. Analog**
+**Simulations:**
+- Cadence Spectre or open-source ngspice
+- Transistor-level SPICE models
+- Monte Carlo process variation analysis
 
-| **Aspect** | **Digital Chip** (Phase 1) | **Analog Chip** (Phase 4) |
-|---|---|---|
-| **Design Tool** | Verilog HDL | SPICE/Cadence Spectre |
-| **Simulation** | Gate/RTL level | Transistor level |
-| **Speed** | ~100MHz-1GHz | ~10-100MHz (trade for security) |
-| **Power** | ~100mW | ~10-50mW (less switching) |
-| **Area** | Larger (many gates) | Smaller (fewer transistors) |
-| **Noise Immunity** | Good (rail-to-rail) | Better (differential design) |
-| **Side-Channel Risk** | High (data-dependent timing) | Lower (inherent noise, nonlinearity) |
-| **Process Tech** | Advanced (5nm-28nm) | Mature (65nm-180nm) |
-| **Design Time** | Months | Years (full-custom analog) |
-| **Cost/Unit** | Low @ volume | High (NRE heavy) |
-| **Analog Expertise** | Not needed | **Essential** |
+**Characterization:**
+- Temperature sweeps: -40°C to +125°C
+- Supply variation: ±10% voltage tolerance
+- Device mismatch analysis
+- Transient and frequency response
+- Noise floor measurements
+- Side-channel leakage quantification
 
-#### **Why Analog is Awesome for Crypto** 🎯
-1. **Inherent Noise**: Analog circuits naturally generate noise → harder to side-channel attack
-2. **Continuous Signals**: Harder to reverse-engineer discrete logic states
-3. **Nonlinear Behavior**: Op-amp saturation and clipping create unpredictability
-4. **Area Efficiency**: Full-custom analog uses ~10x fewer transistors than digital
-5. **Power Efficiency**: No clock switching = lower power consumption
-6. **Hardware Obfuscation**: Extremely difficult to copy or analyze without silicon
+**Tape-out Strategy:**
+- 2-3 iterations expected for optimized design
+- Test structures for parameter extraction
+- Yield analysis and design-for-test (DFT)
 
-#### **Implementation Strategy for Analog Phase**
-1. **Year 1-2**: Digital phase to production
-2. **Year 2-3**: Analog design (full-custom layout, 2-3 tape-outs)
-3. **Year 3-4**: Hybrid chip (digital core + analog security peripherals)
-4. **Year 4+**: Pure analog core version (ultimate security)
+---
+
+### **Phase 3: Hybrid Chip (Both Analog & Digital Mix)** 🚀 (Post-Phase 2)
+Combine the best of both worlds: fast digital core with secure analog peripherals.
+
+#### **Architecture Overview**
+
+```
+┌──────────────────────────────────────────────────┐
+│         Hybrid Cryptographic System               │
+│                                                   │
+│  ┌────────────────────────────────────────────┐  │
+│  │  Digital Control Logic (RTL Verilog)        │  │
+│  │  - State machine                            │  │
+│  │  - Instruction decoder                      │  │
+│  │  - Interrupt/DMA handlers                   │  │
+│  └────────────────────────────────────────────┘  │
+│                    ↓ AXI4                         │
+│  ┌────────────────────────────────────────────┐  │
+│  │  Fast Digital Crypto Cores                  │  │
+│  │  - ECDSA (1GHz, 100mW)                      │  │
+│  │  - Keccak-256 (pipelined)                   │  │
+│  │  - Quick operations                         │  │
+│  └────────────────────────────────────────────┘  │
+│                    ↓ Analog Interface             │
+│  ┌────────────────────────────────────────────┐  │
+│  │  Secure Analog Peripherals                  │  │
+│  │  - TRNG (true random entropy)               │  │
+│  │  - PUF (physical unclonable function)       │  │
+│  │  - Side-channel obfuscation                 │  │
+│  │  - Fault detection/injection resistance    │  │
+│  └────────────────────────────────────────────┘  │
+│                                                   │
+└──────────────────────────────────────────────────┘
+```
+
+#### **Digital Core (Fast & Functional)**
+
+- **ECDSA Engine**: High-speed signature operations
+- **Keccak-256 Pipeline**: Pipelined hashing
+- **Block Validator**: Blockchain consensus
+- **Control Logic**: Instruction sequencing
+- **Memory Interface**: Register files and caches
+
+**Specifications:**
+- Clock: ~1GHz (aggressive timing)
+- Power: ~200mW (digital switching)
+- Area: Minimal (standard cell library)
+- Process: Advanced node (28nm, 14nm, 7nm)
+
+#### **Analog Peripherals (Secure & Private)**
+
+**True Random Number Generator (TRNG):**
+- Zener diode entropy source
+- Analog amplification and filtering
+- Post-processing (Von Neumann corrector, XOR gates)
+- Provides seed for crypto operations
+- Enables per-operation randomization (blinding)
+
+**Physical Unclonable Function (PUF):**
+- Ring oscillator arrays (device mismatch variation)
+- Analog comparison of oscillation frequencies
+- Generates unique chip fingerprint
+- Challenge-response authentication
+- No stored secrets needed
+
+**Side-Channel Obfuscation:**
+- Analog current-mode noise injection
+- Differential signal routing
+- Power supply filtering (reduces EM leakage)
+- Temperature-dependent delay compensation
+- Prevents timing attacks and power analysis
+
+**Fault Detection & Injection Resistance:**
+- Analog voltage glitch sensors
+- Frequency monitors (clock anomalies)
+- Temperature threshold detectors
+- Substrate biasing for transient fault hardening
+- Automatic shutdown on attack detection
+
+#### **Interface Between Digital & Analog**
+
+**Analog-to-Digital (A2D) Converters:**
+- TRNG output → RNG seed (8-bit)
+- PUF response → Device ID (64-bit)
+- Sensor outputs → Status flags (fault detection)
+
+**Digital-to-Analog (D2A) Converters:**
+- Control signals → PUF challenge encoding
+- Clock divider → Analog circuit timing
+- Configuration bits → Analog circuit biasing
+
+**Mixed-Signal Interface Design:**
+- Isolated power domains (digital/analog separation)
+- Guard bands around A/D converters
+- Careful substrate biasing
+- Shielded interconnect between domains
+
+#### **Hybrid Operation Flow**
+
+```
+User Input
+    ↓
+Digital Control (Fast)
+    ├─→ Check TRNG for randomness
+    ├─→ Query PUF for chip ID
+    ├─→ Read analog sensors for fault detection
+    ├─→ Apply blinding (TRNG + message)
+    ↓
+Digital ECDSA Core (1ms signature)
+    ├─→ Uses analog TRNG for randomness
+    ├─→ Adds analog noise for side-channel immunity
+    ↓
+Analog Obfuscation (Continuous)
+    └─→ Injects current-mode noise
+    └─→ Varies timing via substrate bias
+    └─→ Filters power supply
+    ↓
+Output Signature (Secure & Fast)
+```
+
+#### **Benefits of Hybrid Approach**
+
+| **Aspect** | **Digital Only** | **Analog Only** | **Hybrid** |
+|---|---|---|---|
+| **Speed** | ⭐⭐⭐⭐⭐ (1GHz) | ⭐⭐ (100MHz) | ⭐⭐⭐⭐⭐ (1GHz) |
+| **Security** | ⭐⭐ (attackable) | ⭐⭐⭐⭐⭐ (very hard) | ⭐⭐⭐⭐⭐ (very hard) |
+| **Power** | ⭐⭐⭐ (100mW) | ⭐⭐⭐⭐⭐ (10mW) | ⭐⭐⭐⭐ (50mW) |
+| **Area** | ⭐⭐⭐⭐ (medium) | ⭐⭐⭐⭐⭐ (small) | ⭐⭐⭐ (medium) |
+| **Design Time** | ⭐⭐⭐⭐⭐ (months) | ⭐ (years) | ⭐⭐⭐ (1-2 years) |
+| **Design Complexity** | ⭐⭐⭐⭐ (standard) | ⭐⭐ (expert analog) | ⭐⭐⭐ (mixed-signal) |
+
+**Winner: Hybrid** 🏆 (Production-grade security + performance)
+
+#### **Manufacturing & Integration**
+
+**Die Size & Cost:**
+- Digital core: ~1-2 mm² (aggressive layout)
+- Analog peripherals: ~0.5-1 mm² (custom design)
+- Total: ~1.5-3 mm² (small enough for mass production)
+- NRE: ~$2-5M (typical ASIC)
+
+**Tape-out Strategy:**
+1. Phase 1: Digital chip tape-out (proven design)
+2. Phase 2: Analog chip tape-out (validated separately)
+3. Phase 3: Hybrid integration (combine on single die)
+
+**Testing:**
+- Digital: Standard DFT scan chains, ATPG vectors
+- Analog: Built-in self-test (BIST) circuits
+- Integration: Cross-domain functional tests
+
+#### **Deployment Scenarios**
+
+**High-Security Applications:**
+- Military/government cryptography
+- Financial infrastructure
+- Critical infrastructure (power grid, aerospace)
+- Uses all analog peripherals (maximum security)
+
+**Commercial/Consumer:**
+- Lighter security profile
+- Uses TRNG only (speed + moderate security)
+- Reduced analog circuit activation
+
+**Real-Time Systems:**
+- Aerospace, automotive, robotics
+- Needs guaranteed determinism
+- Analog circuits provide fault detection + hardening
 
 ---
 
@@ -162,198 +323,77 @@ After the **digital chip is production-ready**, implement a **pure analog versio
 
 ### **Hardware Architecture (56.5% JavaScript, 25.8% Verilog)**
 
-#### **Verilog Chip Core** (`1. Verilog_Chip_Core/`)
-Cryptographic primitives for production deployment:
-- **ECDSA Module**: P-256 curve operations, signature generation/verification
-- **Keccak-256 Hash**: 256-bit cryptographic hashing
-- **Modular Arithmetic**: High-performance 256-bit operations with constant-time execution
-- **Block Processing**: 256-bit message handling, 520-bit signature outputs
-- **AXI4-Lite Interface**: Enterprise-grade hardware communication protocol
+#### **Phase 1 Verilog Chip Core** (`1. Verilog_Chip_Core/`)
+Production-ready digital cryptographic primitives:
+- **ECDSA Module**: P-256 curve, optimized for 256-bit operations
+- **Keccak-256 Hash**: Full permutation implementation, 24 rounds
+- **Modular Arithmetic**: Constant-time field operations
+- **Block Processing**: 256-bit messages, 520-bit signatures
+- **AXI4-Lite Interface**: Enterprise hardware communication protocol
 
-#### **Blockchain Hardware** (`2. Blockchain_Chip_Core/` - NEW)
+#### **Phase 2 Analog Chip Core** (`2. Analog_Chip_Core/` - Future)
+Custom analog implementation:
+- **Analog ECDSA**: Translinear point arithmetic
+- **Analog Keccak-256**: Nonlinear transformation circuits
+- **Analog AXI4-Lite**: Current-mode signaling
+- **TRNG**: Zener entropy source
+- **PUF**: Ring oscillator arrays
+- **Analog Obfuscation**: Current injection, differential routing
+
+#### **Phase 3 Hybrid Integration** (`3. Hybrid_Chip_Integration/` - Future)
+Combined digital + analog on single die:
+- Fast digital core with analog security peripherals
+- Mixed-signal interface design
+- Integrated power management
+- Production-ready layout
+
+#### **Blockchain Hardware** (`4. Blockchain_Chip_Core/`)
 Digital electronics-based distributed ledger:
-- **Merkle Tree Processor**: Hardware acceleration for tree computation
-- **Block Validator**: Pipeline for concurrent transaction verification
-- **State Machine**: Consensus state tracking and block finality
-- **Transaction Pool**: Queue management with priority handling
-
-#### **AXI4-Lite Communication Protocol**
-- **Write/Read Handlers**: Atomic transactions with proper handshakes
-- **Register Mapping**: Control, Status, Data I/O, Blockchain State registers
-- **Status Signals**: Busy, Done, Error flags, Fault detection
-- **Response Codes**: OKAY, EXOKAY, SLVERR, DECERR for error handling
+- **Merkle Tree Processor**: Hardware acceleration
+- **Block Validator**: Parallel signature verification
+- **State Machine**: Consensus protocol
+- **Transaction Pool**: Priority queue
 
 ### **Software Stack (56.5% JavaScript)**
 
-#### **Frontend** (`3. Frontend/`)
+#### **Frontend** (`5. Frontend/`)
 - Web-based cryptographic interface
-- Blockchain transaction creation and verification
+- Blockchain transaction UI
 - Real-time state visualization
 
-#### **Backend Services** (`4. Backend_Services/`)
+#### **Backend Services** (`6. Backend_Services/`)
 - Node.js with Hardhat framework
 - Hardware-software co-simulation
 - Transaction pool management
-- Blockchain synchronization protocol
+- Blockchain node synchronization
 
-#### **Smart Contracts** (`5. Smart_Contracts/`, 2.1% Solidity)
+#### **Smart Contracts** (`7. Smart_Contracts/`, 2.1% Solidity)
 - Blockchain state verification
 - Validator management
-- Cross-chain bridging (future)
 
-### **Toolchain & Testing** (`6. Tools/`)
-- **Simulation Suite**: iverilog, GTKWave integration
-- **FPGA Testing**: Vivado/Quartus deployment
-- **CI/CD Pipelines**: GitHub Actions for continuous verification
-- **Performance Benchmarking**: Throughput and latency analysis
-
----
-
-## **Architecture Highlights**
-
-### **1. Modular Design**
-```
-┌─────────────────────────────────────────────────┐
-│         Blockchain Mini System                   │
-│  ┌────────────────────────────────────────────┐ │
-│  │  Block Validator  │  State Machine  │ Pool  │ │
-│  └────────────────────────────────────────────┘ │
-│                    ↑                              │
-│            AXI4-Lite Interface                   │
-│                    ↑                              │
-│  ┌────────────────────────────────────────────┐ │
-│  │     ECDSA      │   Keccak-256   │   ModArith  │ │
-│  └────────────────────────────────────────────┘ │
-│          Cryptographic Core                      │
-└─────────────────────────────────────────────────┘
-```
-
-### **2. Production-Ready Features**
-- ✅ **Cross-Platform Support**: CPU/FPGA deployment via standardized protocols
-- ✅ **Security-First Design**: Constant-time operations, no data-dependent branches
-- ✅ **Error Handling**: Comprehensive error codes and recovery mechanisms
-- ✅ **Formal Verification Ready**: Design supports mathematical proof of correctness
-- ✅ **Scalability**: Blockchain supports distributed consensus among multiple nodes
-- ✅ **MIT Licensed**: Open-source with commercial deployment capability
+### **Toolchain & Testing** (`8. Tools/`)
+- **Simulation**: iverilog, ngspice (analog SPICE)
+- **FPGA**: Vivado/Quartus deployment
+- **Analog**: Cadence Spectre, open-source EDA tools
+- **CI/CD**: GitHub Actions automation
+- **Benchmarking**: Performance analysis
 
 ---
 
-## **Getting Started**
+## **Comparison: All 3 Phases**
 
-### **Prerequisites**
-```bash
-# Verilog simulation
-sudo apt install iverilog gtkwave
-
-# Node.js backend
-node --version  # v16+ required
-
-# FPGA tools (optional)
-# Vivado or Quartus (vendor-specific)
-
-# For Analog Phase (future):
-# Cadence Virtuoso + Spectre
-# or open-source: ngspice + xschem
-```
-
-### **Running Tests**
-```bash
-# All Verilog simulations
-bash "6. Tools/Simulation/run_simulation.sh"
-
-# Backend tests
-cd "4. Backend_Services"
-npm test
-
-# Full integration test
-npm run test:integration
-```
-
-### **Deployment**
-```bash
-# Synthesize for FPGA
-bash "6. Tools/FPGA/synthesize.sh" vivado
-
-# Start blockchain node
-cd "4. Backend_Services"
-npm start -- --node-id 1
-```
-
----
-
-## **Production Readiness Checklist**
-
-### **Security**
-- [ ] Formal verification completed (ECDSA, Keccak-256)
-- [ ] Side-channel analysis and mitigation
-- [ ] Security audit by external firm
-- [ ] Fault injection testing
-- [ ] Penetration testing on blockchain
-
-### **Performance**
-- [ ] ECDSA sign: < 1ms on FPGA
-- [ ] Keccak-256: < 500μs
-- [ ] Block time: < 100ms
-- [ ] Transaction throughput: > 1000 TPS
-- [ ] Memory footprint: < 100KB
-
-### **Reliability**
-- [ ] 99.9% uptime (blockchain nodes)
-- [ ] Graceful degradation under fault injection
-- [ ] State recovery and synchronization
-- [ ] Comprehensive logging and monitoring
-
-### **Documentation**
-- [ ] Hardware design specification (HDL)
-- [ ] Software API documentation
-- [ ] Deployment guide
-- [ ] Troubleshooting manual
-- [ ] Security model and threat analysis
-
----
-
-## **Phase 2: Blockchain Deep Dive**
-
-### **Why Digital Electronics for Blockchain?**
-By implementing blockchain consensus in hardware:
-- **Deterministic Execution**: Every node produces identical results
-- **Hardware Acceleration**: Signature verification in parallel
-- **Energy Efficiency**: Eliminate redundant software computations
-- **Real-Time Guarantees**: Bounded latency for mission-critical applications
-- **Tamper Resistance**: Hardware-enforced state integrity
-
-### **Mini Blockchain Architecture**
-
-#### **Block Structure** (Digital)
-```verilog
-// Hardware-optimized block header
-module block_header (
-  input [255:0] parent_hash,      // Previous block identifier
-  input [255:0] merkle_root,      // Transaction tree root
-  input [63:0]  timestamp,        // Unix timestamp
-  input [31:0]  block_number,     // Sequence number
-  input [255:0] state_root,       // Account state hash
-  output [255:0] block_hash       // Keccak256(header)
-);
-```
-
-#### **Consensus** (Proof-of-Authority)
-- Validators sign blocks with ECDSA
-- Multiple signatures create finality threshold
-- Hardware verifies N/M validator signatures in parallel
-- State machine transitions: Proposed → Committed → Finalized
-
-#### **Transaction Validation Pipeline**
-1. **Syntax Check**: Valid ECDSA signature
-2. **Semantic Check**: Sufficient balance/nonce
-3. **Execution**: Apply state transition
-4. **Finality**: Once N validators confirm
-
-### **Integration with Crypto Core**
-The blockchain system reuses the ECDSA/Keccak-256 hardware:
-- Each transaction requires 1× ECDSA verify
-- Each block requires 1× Keccak-256 (header)
-- Merkle tree requires N× Keccak-256 (parallel)
+| **Metric** | **Phase 1: Digital** | **Phase 2: Analog** | **Phase 3: Hybrid** |
+|---|---|---|---|
+| **Speed (Signature)** | 0.5-1ms | 10-50ms | 0.5-1ms (uses digital) |
+| **Power** | ~100mW | ~10-50mW | ~50-100mW (balanced) |
+| **Area** | 2-5 mm² | 0.5-2 mm² | 3-5 mm² (combined) |
+| **Side-Channel Risk** | High (timing/power) | Very Low (inherent noise) | Very Low (analog protection) |
+| **Design Time** | 12-18 months | 24-36 months | 12-24 months (Phase 1+2) |
+| **Tape-outs Needed** | 1-2 | 2-3 | 1 (combined) |
+| **Complexity** | Standard digital | Expert analog | Mixed-signal |
+| **Production Ready** | Yes (2026) | Possible (2027-2028) | Yes (2028) |
+| **Security Audit** | Required | Required | Required |
+| **Recommended For** | Fast, cost-optimized | Ultra-secure | Best overall |
 
 ---
 
@@ -361,7 +401,8 @@ The blockchain system reuses the ECDSA/Keccak-256 hardware:
 
 ```
 Virtual_Chip_Signature_System/
-├── 1. Verilog_Chip_Core/
+│
+├── 1. Verilog_Chip_Core/           ← PHASE 1: Digital
 │   ├── src/
 │   │   ├── ecdsa_signer.v
 │   │   ├── ecdsa_verifier.v
@@ -371,10 +412,41 @@ Virtual_Chip_Signature_System/
 │   ├── testbench/
 │   │   ├── tb_ecdsa.v
 │   │   ├── tb_keccak256.v
-│   │   └── run_tests.sh
+│   │   └── README.md
 │   └── README.md
 │
-├── 2. Blockchain_Chip_Core/           ← NEW
+├── 2. Analog_Chip_Core/            ← PHASE 2: Analog (Future)
+│   ├── circuits/
+│   │   ├── ecdsa_analog.sp
+│   │   ├── keccak256_analog.sp
+│   │   ├── trng.sp
+│   │   ├── puf.sp
+│   │   └── axi4_analog_interface.sp
+│   ├── layout/
+│   │   └── gdsii_exports/
+│   ├── simulations/
+│   │   ├── tb_ecdsa_analog.sp
+│   │   ├── corner_analysis/
+│   │   └── mismatch_monte_carlo/
+│   └── README_ANALOG.md
+│
+├── 3. Hybrid_Chip_Integration/     ← PHASE 3: Hybrid (Future)
+│   ├── rtl/
+│   │   ├── digital_core.v
+│   │   ├── a2d_converter.v
+│   │   ├── d2a_converter.v
+│   │   └── mixed_signal_interface.v
+│   ├── analog/
+│   │   ├── trng_analog.sp
+│   │   ├── puf_analog.sp
+│   │   └── fault_detection.sp
+│   ├── integration/
+│   │   ├── floorplan/
+│   │   ├── power_domains/
+│   │   └── dft_strategy/
+│   └── README_HYBRID.md
+│
+├── 4. Blockchain_Chip_Core/
 │   ├── src/
 │   │   ├── block_validator.v
 │   │   ├── merkle_processor.v
@@ -386,12 +458,12 @@ Virtual_Chip_Signature_System/
 │   │   └── scenarios/
 │   └── README.md
 │
-├── 3. Frontend/
+├── 5. Frontend/
 │   ├── src/
 │   ├── public/
 │   └── package.json
 │
-├── 4. Backend_Services/
+├── 6. Backend_Services/
 │   ├── src/
 │   │   ├── crypto_interface.js
 │   │   ├── blockchain_node.js
@@ -400,72 +472,140 @@ Virtual_Chip_Signature_System/
 │   ├── tests/
 │   └── package.json
 │
-├── 5. Smart_Contracts/
+├── 7. Smart_Contracts/
 │   └── contracts/
 │
-├── 6. Tools/
+├── 8. Tools/
 │   ├── Simulation/
 │   │   ├── run_simulation.sh
 │   │   └── config.json
 │   ├── FPGA/
 │   │   ├── synthesize.sh
 │   │   └── timing_constraints.xdc
-│   └── Benchmarking/
-│
-├── 7. Analog_Chip_Design/ (Future - Phase 4)
-│   ├── circuits/
-│   │   ├── ecdsa_analog.sp
-│   │   ├── keccak256_analog.sp
-│   │   └── axi4_analog_interface.sp
-│   ├── layout/
-│   │   └── gdsii_exports/
-│   ├── simulations/
-│   │   ├── tb_ecdsa_analog.sp
-│   │   └── corner_analysis/
-│   ├── testbenches/
+│   ├── Analog_Simulation/
+│   │   ├── ngspice_config.cfg
 │   │   └── spectre_config.cfg
-│   └── README_ANALOG.md
+│   └── Benchmarking/
 │
 └── README.md (this file)
 ```
 
 ---
 
-## **Next Steps**
+## **Getting Started (Phase 1)**
 
-### **Immediate Actions**
-1. [ ] Create `2. Blockchain_Chip_Core/` directory structure
-2. [ ] Design block validator module (Verilog)
-3. [ ] Implement Merkle tree processor
-4. [ ] Create blockchain state machine
+### **Prerequisites**
+```bash
+# Verilog simulation
+sudo apt install iverilog gtkwave
 
-### **Short-term** (Next 4 weeks)
-1. [ ] Complete blockchain hardware design
-2. [ ] Integrate with crypto core via AXI4
-3. [ ] Build consensus protocol simulator
-4. [ ] Create comprehensive testbenches
+# Node.js backend
+node --version  # v16+ required
 
-### **Medium-term** (Next 3 months)
-1. [ ] FPGA deployment and timing closure
-2. [ ] Multi-node blockchain simulator
-3. [ ] Performance benchmarking
-4. [ ] Security audit preparation
+# FPGA tools (optional)
+# Vivado or Quartus (vendor-specific)
+```
 
-### **Long-term** (Future)
-1. [ ] Analog hardware integration (TRNG, power filtering)
-2. [ ] Production silicon tape-out
-3. [ ] **Phase 4: Pure Analog Implementation** (After digital production)
-4. [ ] Commercial deployment
+### **Running Tests**
+```bash
+# All Verilog simulations
+bash "8. Tools/Simulation/run_simulation.sh"
+
+# Backend tests
+cd "6. Backend_Services"
+npm test
+
+# Full integration
+npm run test:integration
+```
+
+### **FPGA Deployment**
+```bash
+# Synthesize for FPGA
+bash "8. Tools/FPGA/synthesize.sh" vivado
+
+# Start blockchain node
+cd "6. Backend_Services"
+npm start -- --node-id 1
+```
+
+---
+
+## **Timeline**
+
+```
+2026 (Now)
+  ├─ Phase 1: Digital Chip Development
+  │  ├─ Q2: FPGA validation
+  │ └─ Q4: Tape-out 1 (design iteration)
+  │
+2027
+  ├─ Phase 1: Production Silicon (digital)
+  │  └─ Q1: First chips arrive
+  │
+  └─ Phase 2: Analog Chip Design (starts parallel)
+     ├─ Q2-Q3: Circuit design & simulation
+     └─ Q4: Tape-out 1 (analog)
+│
+2028
+  ├─ Phase 2: Analog Validation
+  │  ├─ Q1-Q2: Measurement & refinement
+  │  └─ Q3: Tape-out 2 (optimized analog)
+  │
+  └─ Phase 3: Hybrid Integration (starts)
+     ├─ Q3-Q4: Design hybrid on single die
+     └─ Q4: Tape-out 1 (hybrid)
+│
+2029
+  └─ Phase 3: Hybrid Production
+     └─ Q1: Hybrid chips ready
+```
+
+---
+
+## **Production Readiness Checklist**
+
+### **Phase 1: Digital**
+- [ ] Formal verification (ECDSA, Keccak-256, blockchain)
+- [ ] Side-channel analysis & mitigation
+- [ ] External security audit
+- [ ] Fault injection testing (EMFI, LFI)
+- [ ] Performance benchmarking (timing, power)
+- [ ] FPGA validation on production platform
+- [ ] Manufacturing test suite (ATPG, DFT)
+- [ ] Documentation (1000+ pages)
+
+### **Phase 2: Analog**
+- [ ] SPICE simulation (all corners & mismatch)
+- [ ] Layout verification (DRC, LVS, parasitic extraction)
+- [ ] Monte Carlo yield analysis
+- [ ] Temperature & supply variation testing
+- [ ] Noise floor characterization
+- [ ] TRNG randomness validation (NIST tests)
+- [ ] PUF uniqueness & stability
+- [ ] Post-silicon measurements (2-3 tape-outs)
+
+### **Phase 3: Hybrid**
+- [ ] Mixed-signal integration testing
+- [ ] Digital-analog interface validation
+- [ ] Cross-domain noise analysis
+- [ ] Full system security certification
+- [ ] Production yield prediction
+- [ ] Cost analysis & DFM optimization
 
 ---
 
 ## **Contributing**
 
-This project follows IEEE 1364 (Verilog) standards and Node.js best practices.
+This project follows:
+- IEEE 1364 (Verilog) standards
+- Node.js best practices
+- Analog design guidelines (CMOS, layout)
 
-- **Design Reviews**: All major changes require peer review
-- **Testing**: 95%+ code coverage required
-- **Documentation**: Every module must have HDL comments and API docs
+Requirements:
+- **Design Reviews**: All major changes
+- **Testing**: >95% coverage (digital), full simulation (analog)
+- **Documentation**: Every module must be documented
 
 ---
 
@@ -479,10 +619,13 @@ MIT License - See LICENSE file for details
 
 - **Project Lead**: M-Sai-Ruthvik
 - **Issues & Discussions**: GitHub Issues
-- **Security Reports**: security@example.com (responsible disclosure)
+- **Security Reports**: security@example.com
 
 ---
 
-**Status**: 🟡 Phase 1 (Digital Crypto Core) → Phase 2 (Blockchain) in progress
-**Target**: Production-ready silicon within 12 months
-**Dream**: Pure analog implementation by year 4 ⚡
+**Status**:
+- 🟢 Phase 1 (Digital): **IN PROGRESS** (Target: Q4 2026 tape-out)
+- 🟡 Phase 2 (Analog): **PLANNING** (Target: Q3 2027 tape-out)
+- 🔵 Phase 3 (Hybrid): **FUTURE** (Target: Q4 2028 tape-out)
+
+**Dream**: Revolutionary cryptographic hardware that is both **blazingly fast** AND **fortress-secure** ⚡🔒
